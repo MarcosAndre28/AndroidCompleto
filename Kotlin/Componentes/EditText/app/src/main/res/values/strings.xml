@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">EditText</string>
+    <string name="email">Digite seu Email</string>
+    <string name="send">Enviar</string>
+</resources>
