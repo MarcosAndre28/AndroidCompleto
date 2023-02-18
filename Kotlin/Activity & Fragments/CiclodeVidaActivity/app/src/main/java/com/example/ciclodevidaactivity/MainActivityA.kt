@@ -3,6 +3,8 @@ package com.example.ciclodevidaactivity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ciclodevidaactivity.databinding.ActivityMainABinding
 import com.example.ciclodevidaactivity.databinding.ActivityMainBBinding
@@ -48,9 +50,25 @@ class MainActivityA : AppCompatActivity() {
 
     private fun initListeners(){
         binding.btNext.setOnClickListener {
-            val intent = Intent(this,MainActivityB::class.java)
-            intent.putExtra("user",User("Marcos",22))
-            startActivity(intent)
+           resultlauncher.launch(Intent(this,MainActivityB::class.java))
         }
+    }
+
+    private val resultlauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        result : ActivityResult ->
+        val resultCode = result.resultCode
+        val data = result.data
+
+      if (resultCode == RESULT_OK){
+          if (data != null){
+              if (data.hasExtra("user")){
+                  val user = data.getSerializableExtra("user") as User
+                  Log.i("TAG", "getExtra: ${user.name}")
+                  Log.i("TAG", "getExtra: ${user.age}")
+              }
+          }
+      }
     }
 }
