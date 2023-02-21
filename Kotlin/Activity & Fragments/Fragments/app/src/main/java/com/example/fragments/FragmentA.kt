@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.example.fragments.databinding.FragmentABinding
 
 
@@ -13,16 +15,35 @@ class FragmentA : Fragment() {
     private var _binding : FragmentABinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentABinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initListeners()
+        listenerFragment()
+    }
+
+    private fun initListeners(){
+
+        val name = "Marcos"
+
+        binding.btnNext.setOnClickListener {
+            val action = FragmentADirections.actionFragmentAToFragmentB(name)
+            findNavController().navigate(action)
+        }
+    }
+
+    private fun listenerFragment(){
+        parentFragmentManager.setFragmentResultListener(
+            "KEY",
+            this,
+        ){key,bundle ->
+            val name = bundle["KEY"].toString()
+            Toast.makeText(requireContext(), name, Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onDestroyView() {
